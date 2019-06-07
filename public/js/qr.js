@@ -22,6 +22,8 @@ $(document).ready(function () {
       redirect_urls: {
         "return_url": "https://qrecpay.herokuapp.com/qr-pay/success",
         "cancel_url": "https://qrecpay.herokuapp.com/qr-pay/cancel"
+        // "return_url": "https://nequeo.serveo.net/qr-pay/success",
+        // "cancel_url": "https://nequeo.serveo.net/qr-pay/cancel"
       }
     };
 
