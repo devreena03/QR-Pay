@@ -2,7 +2,7 @@ var express = require("express");
 
 var app = express.Router();
 
-app.get("/qr-pay", function(req, res){
+app.get("/", function(req, res){
 	res.sendFile(__basedir + '/public/view/qr-pay.html');
 });
 
