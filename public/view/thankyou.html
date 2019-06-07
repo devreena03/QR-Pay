@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Thank you</title>
+</head>
+
+<body onload="pageLoad()">
+    <div style="text-align: center; margin-top: 10%">
+        <h3 id="message">hello</h3>
+     </div> 
+    <script>
+        function pageLoad() {
+            var queryStr = window.location.search;
+            if (queryStr) {
+                var paramPairs = queryStr.substr(1).split('&');
+                var params = {};
+                for (var i = 0; i < paramPairs.length; i++) {
+                    var parts = paramPairs[i].split('=');
+                    params[parts[0]] = parts[1];
+                }
+
+                if (params.operation) {
+                    var endmsg = ", you can close the browser!!"
+                    if (params.operation === "success") {
+                        document.getElementById("message").innerHTML = "Payment completed with Payment-id: " + params.paymentId + endmsg;
+                    } else if (params.operation === "failed") {
+                        document.getElementById("message").innerHTML = "Payment failed with Payment-id: " + params.paymentId + endmsg;
+                    } else if (params.operation === "cancel") {
+                        document.getElementById("message").innerHTML = "Payment canceled with ec-token: " + params.token + endmsg;
+                    }
+                }
+            }
+        }
+    </script> 
+</body>
+
+</html>
