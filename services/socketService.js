@@ -19,10 +19,10 @@ exports.connect = function (socket) {
     });
 }
 
-exports.paymentCompleteEvent = function (token) {
+exports.paymentCompleteEvent = function (token, transactionDetails) {
     var socket = paymentConnections[token];
     console.log(socket.id);
-    socket.emit('payment-complete', { message: "success" });
+    socket.emit('payment-complete', transactionDetails);
     cleanup(token);
 }
 

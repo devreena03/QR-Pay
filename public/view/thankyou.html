@@ -9,8 +9,8 @@
 </head>
 
 <body onload="pageLoad()">
-    <div style="text-align: center; margin-top: 10%">
-        <h3 id="message">hello</h3>
+    <div style="text-align: center; margin-top: 20%">
+        <p id="message"></p>
      </div> 
     <script>
         function pageLoad() {
@@ -24,9 +24,9 @@
                 }
 
                 if (params.operation) {
-                    var endmsg = ", you can close the browser!!"
+                    var endmsg = ", you can close the browser now!!"
                     if (params.operation === "success") {
-                        document.getElementById("message").innerHTML = "Payment completed with Payment-id: " + params.paymentId + endmsg;
+                        document.getElementById("message").innerHTML = "Payment completed with PayPal transaction id: " + params.paymentId + endmsg;
                     } else if (params.operation === "failed") {
                         document.getElementById("message").innerHTML = "Payment failed with Payment-id: " + params.paymentId + endmsg;
                     } else if (params.operation === "cancel") {

@@ -9,10 +9,6 @@ var sanboxUrl = 'https://api.sandbox.paypal.com';
 
 router.post('/create-payment', function (req, res) {
     console.log("create");
-    // setTimeout(()=>socketService.paymentCompleteEvent("12345"),500);
-    // res.json({
-    //     'qr_img': "qr/" + "1559197286956.png"
-    // });
     var options = {
         uri: sanboxUrl + '/v1/payments/payment',
         method: 'POST',
@@ -91,14 +87,18 @@ router.get('/success', function (req, res) {
                 return;
             }
             console.log(response.body);
+            var transactionDetails = {};
             if (response.statusCode == 200 && response.body.state == "approved") {
+                transactionDetails = extractTransactionDetails(response.body);
+                transactionDetails.status = 'success';
                 res.status(response.statusCode);
-                res.redirect('/thankyou?operation=success&paymentId=' + req.query.paymentId);
+                res.redirect('/thankyou?operation=success&paymentId=' + transactionDetails.txnId);
             } else {
+                transactionDetails.status = 'failed';
                 res.status(response.statusCode);
                 res.redirect('/thankyou?operation=failed&paymentId=' + req.query.paymentId);
             }
-            socketService.paymentCompleteEvent(req.query.token.match(/EC-(.*)/)[1]);
+            socketService.paymentCompleteEvent(req.query.token.match(/EC-(.*)/)[1], transactionDetails);
             res.end();
         });
     }, function (err) {
@@ -110,5 +110,23 @@ router.get('/cancel', function (req, res) {
     console.log("payment cancel");
     res.redirect('/thankyou?operation=cancel&token=' + req.query.token);
 });
+
+function extractTransactionDetails(data){
+    var transactionDetails = {};
+    transactionDetails.id = data.id;
+    transactionDetails.state = data.state;
+    transactionDetails.amount = data.transactions[0].amount.total;
+    transactionDetails.currency = data.transactions[0].amount.currency;
+    transactionDetails.buyerName = data.payer.payer_info.first_name+ " " + data.payer.payer_info.last_name;
+    transactionDetails.buyerEmail = data.payer.payer_info.email;
+    var related_resources = data.transactions[0].related_resources;
+    for(var i=0; i< related_resources.length; i++){
+        if(related_resources[i]["sale"]){
+            transactionDetails["txnId"] = related_resources[i]["sale"].id;
+        }
+    }
+    console.log(transactionDetails);
+    return transactionDetails;
+}
 
 module.exports = router;
